@@ -91,12 +91,12 @@ My personal portfolio showcasing my skills, projects, and web development work.
 # 📊 GitHub Statistics
 
 <p align="center">
-  <img height="180em" src="https://github-readme-stats.vercel.app/api?username=Ayushyaman-16&show_icons=true&theme=tokyonight&hide_border=true&count_private=true" alt="GitHub Stats"/>
+  <img height="180em" src="https://github-readme-stats.vercel.app/api?username=Ayushyaman-16&show_icons=true&theme=tokyonight&hide_border=true" alt="GitHub Stats"/>
   <img height="180em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=Ayushyaman-16&layout=compact&theme=tokyonight&hide_border=true" alt="Top Languages"/>
 </p>
 
 <p align="center">
-  <img src="https://github-readme-streak-stats.herokuapp.com/?user=Ayushyaman-16&theme=tokyonight&hide_border=true" alt="GitHub Streak"/>
+  <img src="https://streak-stats.demolab.com/?user=Ayushyaman-16&theme=tokyonight&hide_border=true" alt="GitHub Streak"/>
 </p>
 
 ---
