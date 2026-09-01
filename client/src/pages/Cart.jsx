@@ -11,18 +11,24 @@ import {
 
 function Cart() {
   const navigate = useNavigate();
+
   const [cartItems, setCartItems] = useState([]);
 
-  // Load cart items from localStorage
+  // Load cart from localStorage
   useEffect(() => {
-    const savedCart = JSON.parse(
-      localStorage.getItem("vikashCart") || "[]"
-    );
+    try {
+      const savedCart = JSON.parse(
+        localStorage.getItem("vikashCart") || "[]"
+      );
 
-    setCartItems(savedCart);
+      setCartItems(Array.isArray(savedCart) ? savedCart : []);
+    } catch (error) {
+      console.error("Error loading cart:", error);
+      setCartItems([]);
+    }
   }, []);
 
-  // Update localStorage and navbar cart count
+  // Update cart
   const updateCart = (updatedCart) => {
     setCartItems(updatedCart);
 
@@ -31,17 +37,17 @@ function Cart() {
       JSON.stringify(updatedCart)
     );
 
-    // Notify navbar that cart has changed
+    // Update Navbar cart count
     window.dispatchEvent(new Event("cartUpdated"));
   };
 
   // Increase quantity
-  const increaseQuantity = (id) => {
+  const increaseQuantity = (productName) => {
     const updatedCart = cartItems.map((item) =>
-      item.id === id
+      item.name === productName
         ? {
             ...item,
-            quantity: item.quantity + 1,
+            quantity: (item.quantity || 0) + 1,
           }
         : item
     );
@@ -50,13 +56,13 @@ function Cart() {
   };
 
   // Decrease quantity
-  const decreaseQuantity = (id) => {
+  const decreaseQuantity = (productName) => {
     const updatedCart = cartItems
       .map((item) =>
-        item.id === id
+        item.name === productName
           ? {
               ...item,
-              quantity: item.quantity - 1,
+              quantity: (item.quantity || 0) - 1,
             }
           : item
       )
@@ -65,16 +71,16 @@ function Cart() {
     updateCart(updatedCart);
   };
 
-  // Remove product completely
-  const removeItem = (id) => {
+  // Remove product
+  const removeItem = (productName) => {
     const updatedCart = cartItems.filter(
-      (item) => item.id !== id
+      (item) => item.name !== productName
     );
 
     updateCart(updatedCart);
   };
 
-  // Clear complete cart
+  // Clear cart
   const clearCart = () => {
     localStorage.removeItem("vikashCart");
 
@@ -85,17 +91,20 @@ function Cart() {
 
   // Total quantity
   const totalItems = cartItems.reduce(
-    (total, item) => total + item.quantity,
+    (total, item) => total + (item.quantity || 0),
     0
   );
 
   return (
     <section className="min-h-screen bg-slate-100 py-10">
       <div className="mx-auto max-w-7xl px-6">
-        
+
         {/* Page Header */}
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
           <div>
+
+            {/* Continue Shopping */}
             <button
               onClick={() => navigate("/products")}
               className="mb-4 flex items-center gap-2 text-sm font-semibold text-gray-600 transition hover:text-red-600"
@@ -104,16 +113,22 @@ function Cart() {
               Continue Shopping
             </button>
 
+            {/* Heading */}
             <h1 className="flex items-center gap-3 text-4xl font-bold text-slate-900">
-              <ShoppingCart className="text-red-600" size={36} />
+              <ShoppingCart
+                className="text-red-600"
+                size={36}
+              />
               Your Cart
             </h1>
 
             <p className="mt-2 text-gray-500">
-              {totalItems} item{totalItems !== 1 ? "s" : ""} in your cart
+              {totalItems} item
+              {totalItems !== 1 ? "s" : ""} in your cart
             </p>
           </div>
 
+          {/* Clear Cart */}
           {cartItems.length > 0 && (
             <button
               onClick={clearCart}
@@ -128,6 +143,7 @@ function Cart() {
         {/* Empty Cart */}
         {cartItems.length === 0 ? (
           <div className="rounded-3xl bg-white p-12 text-center shadow-sm">
+
             <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-red-50 text-red-600">
               <ShoppingCart size={38} />
             </div>
@@ -148,17 +164,22 @@ function Cart() {
             </button>
           </div>
         ) : (
+
+          /* Cart With Products */
           <div className="grid gap-8 lg:grid-cols-3">
-            
+
             {/* Cart Products */}
             <div className="space-y-5 lg:col-span-2">
+
               {cartItems.map((item) => (
                 <div
-                  key={item.id}
+                  key={item.name}
                   className="flex flex-col gap-5 rounded-2xl bg-white p-5 shadow-sm sm:flex-row sm:items-center"
                 >
+
                   {/* Product Image */}
                   <div className="flex h-28 w-full items-center justify-center overflow-hidden rounded-xl bg-slate-50 sm:w-36">
+
                     {item.image ? (
                       <img
                         src={item.image}
@@ -171,10 +192,12 @@ function Cart() {
                         className="text-gray-300"
                       />
                     )}
+
                   </div>
 
                   {/* Product Details */}
                   <div className="flex-1">
+
                     <h2 className="text-xl font-bold text-slate-900">
                       {item.name}
                     </h2>
@@ -183,51 +206,63 @@ function Cart() {
                       FMCG Product
                     </p>
 
-                    {/* Quantity Controls */}
+                    {/* Quantity */}
                     <div className="mt-4 flex items-center gap-3">
+
+                      {/* Minus */}
                       <button
                         onClick={() =>
-                          decreaseQuantity(item.id)
+                          decreaseQuantity(item.name)
                         }
                         className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 text-slate-700 transition hover:bg-gray-100"
                       >
                         <Minus size={18} />
                       </button>
 
+                      {/* Quantity */}
                       <span className="min-w-8 text-center text-lg font-bold text-slate-900">
                         {item.quantity}
                       </span>
 
+                      {/* Plus */}
                       <button
                         onClick={() =>
-                          increaseQuantity(item.id)
+                          increaseQuantity(item.name)
                         }
                         className="flex h-10 w-10 items-center justify-center rounded-lg bg-red-600 text-white transition hover:bg-red-700"
                       >
                         <Plus size={18} />
                       </button>
+
                     </div>
                   </div>
 
                   {/* Remove */}
                   <button
-                    onClick={() => removeItem(item.id)}
+                    onClick={() =>
+                      removeItem(item.name)
+                    }
                     className="self-start rounded-lg p-3 text-red-600 transition hover:bg-red-50 sm:self-center"
                     title="Remove Product"
                   >
                     <Trash2 size={21} />
                   </button>
+
                 </div>
               ))}
+
             </div>
 
             {/* Order Summary */}
             <div className="h-fit rounded-2xl bg-white p-7 shadow-sm">
+
               <h2 className="text-2xl font-bold text-slate-900">
                 Order Summary
               </h2>
 
               <div className="mt-6 border-t border-gray-100 pt-5">
+
+                {/* Total Products */}
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600">
                     Total Products
@@ -238,6 +273,7 @@ function Cart() {
                   </span>
                 </div>
 
+                {/* Total Quantity */}
                 <div className="mt-4 flex items-center justify-between">
                   <span className="text-gray-600">
                     Total Quantity
@@ -247,22 +283,27 @@ function Cart() {
                     {totalItems}
                   </span>
                 </div>
+
               </div>
 
+              {/* Information */}
               <div className="mt-6 rounded-xl bg-red-50 p-4">
                 <p className="text-sm leading-6 text-red-700">
-                  Submit your order request and our team will contact you
-                  regarding wholesale pricing and availability.
+                  Submit your order request and our team will
+                  contact you regarding wholesale pricing and
+                  availability.
                 </p>
               </div>
 
+              {/* Proceed */}
               <button
-                onClick={() => alert("Order functionality will be added in the next step.")}
+                onClick={() => navigate("/login")}
                 className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-red-600 px-5 py-4 font-semibold text-white transition hover:bg-red-700"
               >
                 <ShoppingCart size={20} />
                 Proceed to Order
               </button>
+
             </div>
           </div>
         )}

@@ -18,8 +18,11 @@ import HowItWorks from "./components/home/HowItWorks";
 import BecomeRetailer from "./components/home/BecomeRetailer";
 
 import Products from "./pages/Products";
+import Cart from "./pages/Cart";
 import Login from "./pages/Login";
 import RetailerDashboard from "./pages/RetailerDashboard";
+import Order from "./pages/Order";
+
 
 /* =========================
    HOME PAGE
@@ -38,6 +41,7 @@ function Home() {
   );
 }
 
+
 /* =========================
    ABOUT PAGE
 ========================= */
@@ -45,8 +49,11 @@ function Home() {
 function About() {
   return (
     <section className="bg-slate-50">
+
+      {/* Hero */}
       <div className="bg-slate-900 py-20 text-white">
         <div className="mx-auto max-w-7xl px-6 text-center">
+
           <p className="font-semibold uppercase tracking-widest text-red-400">
             About Vikash Trading Company
           </p>
@@ -59,11 +66,16 @@ function About() {
             We provide quality FMCG products to retailers with reliable
             supply, competitive pricing, and dependable service.
           </p>
+
         </div>
       </div>
 
+
+      {/* About Content */}
       <div className="mx-auto grid max-w-7xl gap-12 px-6 py-20 md:grid-cols-2">
+
         <div>
+
           <p className="font-semibold uppercase tracking-widest text-red-600">
             Who We Are
           </p>
@@ -83,51 +95,73 @@ function About() {
             providing reliable product availability, competitive wholesale
             pricing, and dependable delivery service.
           </p>
+
         </div>
 
+
+        {/* Statistics */}
         <div className="grid gap-5 sm:grid-cols-2">
+
           <div className="rounded-2xl bg-white p-7 shadow-sm">
-            <p className="text-4xl font-bold text-red-600">100+</p>
+            <p className="text-4xl font-bold text-red-600">
+              100+
+            </p>
+
             <p className="mt-2 font-semibold text-slate-900">
               Products Available
             </p>
+
             <p className="mt-2 text-sm text-gray-600">
               A wide range of FMCG products for retailers.
             </p>
           </div>
 
+
           <div className="rounded-2xl bg-white p-7 shadow-sm">
-            <p className="text-4xl font-bold text-red-600">50+</p>
+            <p className="text-4xl font-bold text-red-600">
+              50+
+            </p>
+
             <p className="mt-2 font-semibold text-slate-900">
               Retail Partners
             </p>
+
             <p className="mt-2 text-sm text-gray-600">
               Growing together with our business partners.
             </p>
           </div>
 
+
           <div className="rounded-2xl bg-white p-7 shadow-sm">
             <p className="text-2xl font-bold text-slate-900">
               Reliable Supply
             </p>
+
             <p className="mt-3 text-sm leading-6 text-gray-600">
               Consistent availability of products to support your business.
             </p>
           </div>
 
+
           <div className="rounded-2xl bg-white p-7 shadow-sm">
             <p className="text-2xl font-bold text-slate-900">
               Trusted Brands
             </p>
+
             <p className="mt-3 text-sm leading-6 text-gray-600">
               Supplying popular FMCG brands and quality products.
             </p>
           </div>
+
         </div>
       </div>
 
+
+      {/* Mission */}
       <div className="mx-auto max-w-7xl px-6 pb-20">
+
         <div className="rounded-3xl bg-red-600 px-8 py-12 text-center text-white">
+
           <p className="font-semibold uppercase tracking-widest text-red-100">
             Our Mission
           </p>
@@ -140,20 +174,26 @@ function About() {
             We aim to provide the right products, competitive prices,
             reliable supply, and excellent service to help retailers grow.
           </p>
+
         </div>
+
       </div>
+
     </section>
   );
 }
+
 
 /* =========================
    CONTACT PAGE
 ========================= */
 
 function Contact() {
+
   const [searchParams] = useSearchParams();
 
   const selectedProduct = searchParams.get("product") || "";
+
 
   const getInitialFormData = (product) => ({
     product: product,
@@ -166,6 +206,7 @@ function Contact() {
       : "",
   });
 
+
   const [formData, setFormData] = useState(
     getInitialFormData(selectedProduct)
   );
@@ -173,7 +214,9 @@ function Contact() {
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState("");
 
+
   useEffect(() => {
+
     const initialData = getInitialFormData(selectedProduct);
 
     setFormData(initialData);
@@ -184,14 +227,19 @@ function Contact() {
       "vikashEnquiryData",
       JSON.stringify(initialData)
     );
+
   }, [selectedProduct]);
 
+
   const validateForm = () => {
+
     const newErrors = {};
+
 
     if (!formData.product.trim()) {
       newErrors.product = "Please select a product.";
     }
+
 
     if (!formData.name.trim()) {
       newErrors.name = "Please enter your full name.";
@@ -199,15 +247,18 @@ function Contact() {
       newErrors.name = "Name must contain at least 2 characters.";
     }
 
+
     if (!formData.shopName.trim()) {
       newErrors.shopName = "Please enter your shop name.";
     }
+
 
     if (!formData.mobile.trim()) {
       newErrors.mobile = "Please enter your mobile number.";
     } else if (!/^[0-9]{10}$/.test(formData.mobile)) {
       newErrors.mobile = "Please enter a valid 10-digit mobile number.";
     }
+
 
     if (
       formData.email.trim() &&
@@ -216,67 +267,88 @@ function Contact() {
       newErrors.email = "Please enter a valid email address.";
     }
 
+
     if (!formData.message.trim()) {
       newErrors.message = "Please enter your message.";
     } else if (formData.message.trim().length < 10) {
       newErrors.message = "Message must contain at least 10 characters.";
     }
 
+
     setErrors(newErrors);
 
     return Object.keys(newErrors).length === 0;
   };
 
+
   const handleChange = (e) => {
+
     const { name, value } = e.target;
+
 
     if (name === "mobile" && !/^\d*$/.test(value)) {
       return;
     }
+
 
     const updatedData = {
       ...formData,
       [name]: value,
     };
 
+
     setFormData(updatedData);
+
 
     sessionStorage.setItem(
       "vikashEnquiryData",
       JSON.stringify(updatedData)
     );
 
+
     setErrors((previousErrors) => ({
       ...previousErrors,
       [name]: "",
     }));
 
+
     setSuccessMessage("");
   };
 
+
   const handleSubmit = (e) => {
+
     e.preventDefault();
+
 
     if (!validateForm()) {
       return;
     }
+
 
     sessionStorage.setItem(
       "vikashEnquiryData",
       JSON.stringify(formData)
     );
 
+
     setSuccessMessage(
       `Thank you ${formData.name}! Your enquiry for ${formData.product} has been submitted successfully.`
     );
 
+
     setErrors({});
   };
 
+
   return (
     <section className="min-h-screen bg-slate-50">
+
+      {/* Contact Header */}
       <div className="bg-slate-900 py-16 text-white">
+
         <div className="mx-auto max-w-7xl px-6 text-center">
+
           <p className="font-semibold uppercase tracking-widest text-red-400">
             Get In Touch
           </p>
@@ -289,11 +361,18 @@ function Contact() {
             Have questions about our products or want to become a retail
             partner? Get in touch with our team.
           </p>
+
         </div>
+
       </div>
 
+
+      {/* Contact Content */}
       <div className="mx-auto grid max-w-7xl gap-10 px-6 py-16 lg:grid-cols-2">
+
+        {/* Contact Information */}
         <div>
+
           <p className="font-semibold uppercase tracking-widest text-red-600">
             Contact Information
           </p>
@@ -307,31 +386,49 @@ function Contact() {
             pricing, retailer partnerships, and other business information.
           </p>
 
+
           <div className="mt-8 space-y-5">
-            <div className="rounded-xl bg-white p-5 shadow-sm">
-              <p className="font-semibold text-slate-900">Phone</p>
-              <p className="mt-1 text-gray-600">+91 94057 75338</p>
-            </div>
 
             <div className="rounded-xl bg-white p-5 shadow-sm">
-              <p className="font-semibold text-slate-900">Email</p>
+              <p className="font-semibold text-slate-900">
+                Phone
+              </p>
+
+              <p className="mt-1 text-gray-600">
+                +91 94057 75338
+              </p>
+            </div>
+
+
+            <div className="rounded-xl bg-white p-5 shadow-sm">
+              <p className="font-semibold text-slate-900">
+                Email
+              </p>
+
               <p className="mt-1 text-gray-600">
                 info@vikashtrading.com
               </p>
             </div>
 
+
             <div className="rounded-xl bg-white p-5 shadow-sm">
               <p className="font-semibold text-slate-900">
                 Business Hours
               </p>
+
               <p className="mt-1 text-gray-600">
                 Monday - Saturday: 9:00 AM - 7:00 PM
               </p>
             </div>
+
           </div>
+
         </div>
 
+
+        {/* Contact Form */}
         <div className="rounded-2xl bg-white p-8 shadow-sm">
+
           <h2 className="text-2xl font-bold text-slate-900">
             Send Us a Message
           </h2>
@@ -340,8 +437,11 @@ function Contact() {
             Fill in the form below and our team will get back to you.
           </p>
 
+
+          {/* Selected Product */}
           {selectedProduct && (
             <div className="mt-6 rounded-xl border border-red-200 bg-red-50 p-5">
+
               <p className="text-sm font-semibold uppercase tracking-wider text-red-600">
                 Selected Product
               </p>
@@ -349,17 +449,27 @@ function Contact() {
               <p className="mt-1 text-xl font-bold text-slate-900">
                 {selectedProduct}
               </p>
+
             </div>
           )}
 
+
+          {/* Success Message */}
           {successMessage && (
             <div className="mt-6 rounded-xl border border-green-200 bg-green-50 p-4 font-medium text-green-700">
               {successMessage}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="mt-7 space-y-5">
+
+          <form
+            onSubmit={handleSubmit}
+            className="mt-7 space-y-5"
+          >
+
+            {/* Product */}
             <div>
+
               <label className="mb-2 block font-medium text-slate-700">
                 Product *
               </label>
@@ -382,9 +492,13 @@ function Contact() {
                   {errors.product}
                 </p>
               )}
+
             </div>
 
+
+            {/* Full Name */}
             <div>
+
               <label className="mb-2 block font-medium text-slate-700">
                 Full Name *
               </label>
@@ -407,9 +521,13 @@ function Contact() {
                   {errors.name}
                 </p>
               )}
+
             </div>
 
+
+            {/* Shop Name */}
             <div>
+
               <label className="mb-2 block font-medium text-slate-700">
                 Shop Name *
               </label>
@@ -432,9 +550,13 @@ function Contact() {
                   {errors.shopName}
                 </p>
               )}
+
             </div>
 
+
+            {/* Mobile */}
             <div>
+
               <label className="mb-2 block font-medium text-slate-700">
                 Mobile Number *
               </label>
@@ -458,9 +580,13 @@ function Contact() {
                   {errors.mobile}
                 </p>
               )}
+
             </div>
 
+
+            {/* Email */}
             <div>
+
               <label className="mb-2 block font-medium text-slate-700">
                 Email Address
               </label>
@@ -483,9 +609,13 @@ function Contact() {
                   {errors.email}
                 </p>
               )}
+
             </div>
 
+
+            {/* Message */}
             <div>
+
               <label className="mb-2 block font-medium text-slate-700">
                 Message *
               </label>
@@ -508,61 +638,65 @@ function Contact() {
                   {errors.message}
                 </p>
               )}
+
             </div>
 
+
+            {/* Submit */}
             <button
               type="submit"
               className="w-full rounded-lg bg-red-600 px-6 py-4 font-semibold text-white transition hover:bg-red-700"
             >
               Send Enquiry
             </button>
+
           </form>
+
         </div>
+
       </div>
+
     </section>
   );
 }
 
-/* =========================
-   CART PAGE
-========================= */
-
-function Cart() {
-  return (
-    <div className="min-h-screen bg-slate-50 p-20">
-      <h1 className="text-4xl font-bold text-slate-900">
-        Your Cart
-      </h1>
-    </div>
-  );
-}
 
 /* =========================
    WHATSAPP FLOATING BUTTON
 ========================= */
 
 function WhatsAppButton() {
+
   const location = useLocation();
 
   const searchParams = new URLSearchParams(location.search);
-  const selectedProduct = searchParams.get("product") || "";
+
+  const selectedProduct =
+    searchParams.get("product") || "";
 
   const whatsappNumber = "919405775338";
+
 
   let savedEnquiryData = {};
 
   try {
+
     savedEnquiryData = JSON.parse(
       sessionStorage.getItem("vikashEnquiryData") || "{}"
     );
+
   } catch (error) {
+
     savedEnquiryData = {};
+
   }
+
 
   const product =
     selectedProduct ||
     savedEnquiryData.product ||
     "";
+
 
   const hasFullDetails =
     savedEnquiryData.name ||
@@ -571,9 +705,12 @@ function WhatsAppButton() {
     savedEnquiryData.email ||
     savedEnquiryData.message;
 
+
   let whatsappMessage;
 
+
   if (hasFullDetails) {
+
     whatsappMessage = `Hello Vikash Trading Company,
 
 NEW PRODUCT ENQUIRY
@@ -592,21 +729,28 @@ Customer Message:
 ${savedEnquiryData.message || "No message provided"}
 
 Please contact me regarding this enquiry.`;
+
   } else if (product) {
+
     whatsappMessage = `Hello Vikash Trading Company,
 
 I am interested in ${product}.
 
 Please provide me with wholesale availability and pricing details.`;
+
   } else {
+
     whatsappMessage = `Hello Vikash Trading Company,
 
 I am interested in your products. Please provide me with more information.`;
+
   }
+
 
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
     whatsappMessage
   )}`;
+
 
   return (
     <a
@@ -622,33 +766,83 @@ I am interested in your products. Please provide me with more information.`;
   );
 }
 
+
 /* =========================
    APP
 ========================= */
 
 function App() {
+
   return (
     <BrowserRouter>
+
       <Navbar />
 
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/login" element={<Login />} />
 
-        {/* RETAILER DASHBOARD */}
+        {/* Home */}
+        <Route
+          path="/"
+          element={<Home />}
+        />
+
+
+        {/* Products */}
+        <Route
+          path="/products"
+          element={<Products />}
+        />
+
+
+        {/* About */}
+        <Route
+          path="/about"
+          element={<About />}
+        />
+
+
+        {/* Contact */}
+        <Route
+          path="/contact"
+          element={<Contact />}
+        />
+
+
+        {/* Cart */}
+        <Route
+          path="/cart"
+          element={<Cart />}
+        />
+
+
+        {/* Login */}
+        <Route
+          path="/login"
+          element={<Login />}
+        />
+
+
+        {/* Retailer Dashboard */}
         <Route
           path="/dashboard"
           element={<RetailerDashboard />}
         />
+
+
+        {/* Order */}
+        <Route
+          path="/orders"
+          element={<Order />}
+        />
+
       </Routes>
 
+
       <WhatsAppButton />
+
     </BrowserRouter>
   );
 }
+
 
 export default App;
